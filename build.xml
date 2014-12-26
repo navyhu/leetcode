@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<project name="HahuLeetcode">
+	<property name="src.dir" value="src" />
+	<property name="bin.dir" value="bin" />
+	<property name="cls.dir" value="classes" />
+	<!--path id="master-classpath">
+		<fileset dir="${eclipse_plugins.dir}" id="project_lib">
+		</fileset>
+	</path-->
+	<target name="init" />
+	<target name="compile" depends="init">
+		<delete dir="${bin.dir}" />
+		<mkdir dir="${bin.dir}" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.7">
+			<!--classpath refid="master-classpath" /-->
+		</javac>
+	</target>
+</project>
