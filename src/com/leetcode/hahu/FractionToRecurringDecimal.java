@@ -7,40 +7,69 @@ import java.util.Set;
 public class FractionToRecurringDecimal {
 	//corresponding result for a specific remainder
 	class RemainderResult {
-		int remainder;
-		int result;
-		public RemainderResult(int rem, int res) {
+		long remainder;
+		long result;
+		public RemainderResult(long rem, long res) {
 			remainder = rem;
 			result = res;
 		}
-		public int getRemainder() {
+		public long getRemainder() {
 			return remainder;
 		}
-		public int getResult() {
+		public long getResult() {
 			return result;
 		}
-		public void setRemainder(int rem) {
+		public void setRemainder(long rem) {
 			remainder = rem;
 		}
-		public void setResult(int res) {
+		public void setResult(long res) {
 			result = res;
 		}
 	}
 	
-    public String fractionToDecimal(int numerator, int denominator) {
-        String decimalString = null;
+    public String fractionToDecimal(int numeratorInt, int denominatorInt) {
+        StringBuilder decimalString = new StringBuilder();
+        long numerator = numeratorInt;
+        long denominator = denominatorInt;
 
-        int divisor = numerator/denominator;
-        int remainder = numerator%denominator;
+    	//make sure the denominator is not 0
+    	if (denominator == 0) {
+    		decimalString.append("Denominator is 0");
+    		System.out.println(decimalString);
+    		return decimalString.toString();
+    	}
+    	
+    	//get the sign symbol: positive or negative
+    	if (numerator*denominator < 0) {
+    		decimalString.append('-');
+    	}
+    	
+    	//get both absolute value
+        System.out.println("numerator = " + numerator + " denominator = " + denominator);
+    	numerator = Math.abs(numerator);
+    	denominator = Math.abs(denominator);
+        System.out.println("numerator = " + numerator + " denominator = " + denominator);
+
+    	//divide the first time 
+        long divisor = numerator/denominator;
+        long remainder = numerator%denominator;
         System.out.println("divisor = " + divisor + " remainder = " + remainder);
+        decimalString.append(divisor);
         
-        //ArrayList used to store the remainder and corresponding result
+        //no fractional part
+        if (remainder == 0) {
+        	System.out.println("The result is: " + decimalString);
+        	return decimalString.toString();
+        }
+        
+        //ArrayList used to store the remainder and corresponding divisor result
         ArrayList<RemainderResult> remainderResults = new ArrayList<RemainderResult>();
-        Set<Integer> remainderSet = new HashSet<Integer>();
+        //Set used to store remainders already appeared
+        Set<Long> remainderSet = new HashSet<Long>();
         
         while(remainder != 0) {
-        	int numeratorNew = remainder*10;
-        	int result = numeratorNew/denominator;
+        	long numeratorNew = remainder*10;
+        	long result = numeratorNew/denominator;
         	
         	//record the remainder and result pair
         	RemainderResult remainderResult = new RemainderResult(remainder, result);
@@ -54,21 +83,60 @@ public class FractionToRecurringDecimal {
         	
         	//check if the remainder has already appeared, if yes, then the result is repeated
         	if (remainderSet.contains(remainder)) {
-        		
+        		decimalString.append(getRepeatResult(remainderResults, remainder));
+                System.out.println("Result is: " + decimalString.toString());
+        		return decimalString.toString();
         	}
         }
         
         //get the final result
-        System.out.print("Result: " + divisor + ".");
+        decimalString.append('.');
+        //System.out.print("Result: " + divisor + ".");
         for (int i = 0;i < remainderResults.size();i++) {
-        	System.out.print(remainderResults.get(i).getResult());
+        	decimalString.append(remainderResults.get(i).getResult());
+        	//System.out.print(remainderResults.get(i).getResult());
         }
+        System.out.println("Result is: " + decimalString.toString());
         
-        return decimalString;
+        return decimalString.toString();
+    }
+    
+    private String getRepeatResult(ArrayList<RemainderResult> remainderResults, long repeatedRemainder) {
+    	StringBuilder fractionalString = new StringBuilder();
+    	boolean repeatFound = false;
+    	
+    	//get decimal point
+    	fractionalString.append('.');
+    	
+    	//traverse the ArrayList to find out the position of the repeated remainder
+    	for (int i = 0;i < remainderResults.size();i++) {
+    		long result = remainderResults.get(i).getResult();
+    		
+    		//if the repeat position has been found
+    		if (repeatFound) {
+    			fractionalString.append(result);
+    		} else {
+	    		long remainder = remainderResults.get(i).getRemainder();
+	    		if (remainder == repeatedRemainder) {
+	    			//the result is repeated from here
+	    			fractionalString.append('(');
+	    			repeatFound = true;
+	    		}
+	    		fractionalString.append(result);
+    		}
+    	}
+    	
+    	fractionalString.append(')');
+    	
+    	return fractionalString.toString();
     }
     
     public static void main(String[] args) {
     	FractionToRecurringDecimal frac = new FractionToRecurringDecimal();
-    	frac.fractionToDecimal(35, 8);
+    	/*frac.fractionToDecimal(-2, 3);
+    	frac.fractionToDecimal(0, 0);
+    	frac.fractionToDecimal(3, 0);
+    	frac.fractionToDecimal(-7, 12);*/
+    	frac.fractionToDecimal(-1, -2147483648);
     }
 }
