@@ -28,7 +28,7 @@ public class InsertionSort<E extends Comparable<E>> {
 	
 	public static void main(String[] args) {
 		//Integer[] elements = {2, 5, 1, 67, 2, 9, 34, 20};
-		Integer[] elements = RandomGenerater.generateRaondomIntArray(20, 1000);
+		Integer[] elements = RandomGenerater.generateRandomIntegerArray(20, 1000);
 		
 		InsertionSort<Integer> insertionSort = new InsertionSort<Integer>();
 		elements = insertionSort.sort(elements);
